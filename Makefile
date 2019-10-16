@@ -7,7 +7,7 @@ default:
    
 profgen:
 	make PROF_GEN_USE=-fprofile-generate jabi
-	./jabi mandelbrot.b
+	./jabi tiny.b
 
 install: jabi
 	cp jabi /usr/bin
