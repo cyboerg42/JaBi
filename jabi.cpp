@@ -10,8 +10,6 @@ using namespace std;
 #define DATA_MAX_SIZE 32000 // in byte
 #define RAM_SIZE 32000 // in byte
 
-unsigned long long int clk = 0;
-
 char* jmp_to(int pos, char* d, char data[DATA_MAX_SIZE]){
 	d = &data[pos];
 	return d;
@@ -20,15 +18,14 @@ char* jmp_to(int pos, char* d, char data[DATA_MAX_SIZE]){
 int main (int argc, char *argv[]) {
 
   char *d;
-  char buffer;
-
-  ifstream file(argv[1]);
-
   char data[DATA_MAX_SIZE];
   d = data;
 
+  ifstream file(argv[1]);
+	
   if (file.is_open())
   {
+    char buffer;
     while (file.get(buffer))
     {
       *d = buffer;
