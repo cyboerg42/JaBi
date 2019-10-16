@@ -9,4 +9,6 @@ make
 ```
 
 ## usage
+```
 `./jabi tiny.b
+```
