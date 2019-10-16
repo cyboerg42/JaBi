@@ -1,5 +1,6 @@
-// Just another brainfuck interpreter - 30_01_2016 - Peter Kowalsky (acheloos)
+// Just another brainfuck interpreter - 16_10_2019 - Peter Kowalsky (acheloos)
 #include <iostream>
+#include <stdio.h>
 #include <fstream>
 #include <string>
 #include <stdint.h>
@@ -9,13 +10,23 @@ using namespace std;
 #define DATA_MAX_SIZE 32000 // in byte
 #define RAM_SIZE 32000 // in byte
 
+unsigned long long int clk = 0;
+
+char* jmp_to(int pos, char* d, char data[DATA_MAX_SIZE]){
+	d = &data[pos];
+	return d;
+}
+
 int main (int argc, char *argv[]) {
-  char data[DATA_MAX_SIZE];
+
   char *d;
+  char buffer;
+
+  ifstream file(argv[1]);
+
+  char data[DATA_MAX_SIZE];
   d = data;
 
-  char buffer;
-  ifstream file(argv[1]);
   if (file.is_open())
   {
     while (file.get(buffer))
@@ -30,34 +41,35 @@ int main (int argc, char *argv[]) {
     cout << "Unable to open file\n";
     return 0;
   }
-  
-  d = data;
+
   uint8_t ram[RAM_SIZE];
   uint8_t *r;
   r = ram;
 
   register uint8_t reg = 0;
-  
+
+  char* fifo[256];
+  char **fi;
+  fi = fifo;
+
+  d = jmp_to(0, d, data);
+
   do {
     switch (*d) {
       case '+':
-        reg++;
+        (*r)++;
         break;
       case '-':
-        reg--;
+        (*r)--;
         break;
       case '>':
-        (*r) = reg;
         r++;
-        reg = (*r);
         break;
       case '<':
-        (*r) = reg;
         r--;
-        reg = (*r);
         break;
       case '[':
-        if ((reg) == 0) {
+        if ((*r) == 0) {
           while(true) {
             d++;
             if ((*d) == '[') reg++;
@@ -67,28 +79,25 @@ int main (int argc, char *argv[]) {
             }
           }
         }
+	else {
+          fi++;
+	  *fi = d;
+	}
         break;
       case ']':
-        if (reg != 0) {
-          (*r) = reg; reg = 0;
-	  while(true) {
-            d--;
-            if ((*d) == ']') reg++;
-            if ((*d) == '[') {
-              if (reg == 0) {
-		reg = (*r);		
-		break;
-	      }
-              else reg--;
-            }
-          }
+        if ((*r) != 0) {
+	  d = *fi;
+        }
+        else {
+          fi--;
         }
         break;
       case '.':
-        cout << char(reg);
+        cout << char(*r);
+        std::cout << std::flush;
         break;
       case ',':
-        reg = getchar();
+        (*r) = getchar();
         break;
       }
       d++;
