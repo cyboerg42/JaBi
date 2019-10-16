@@ -9,4 +9,4 @@ make
 ```
 
 ## usage
-`./jabi mandelbrot.b`
+`./jabi tiny.b
