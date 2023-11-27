@@ -9,6 +9,7 @@ using namespace std;
 
 #define DATA_MAX_SIZE 32000 // in byte
 #define RAM_SIZE 32000 // in byte
+#define FIFO_SITE 256 // in byte
 
 char* jmp_to(int pos, char* d, char data[DATA_MAX_SIZE]){
 	d = &data[pos];
@@ -45,7 +46,7 @@ int main (int argc, char *argv[]) {
 
   register uint8_t reg = 0;
 
-  char* fifo[256];
+  char* fifo[FIFO_SIZE];
   char **fi;
   fi = fifo;
 
